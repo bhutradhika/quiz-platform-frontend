@@ -80,39 +80,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const storedToken = getCookie(STORAGE_KEYS.TOKEN);
-    const storedUser = getStoredUser();
+    let cancelled = false;
 
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(storedUser);
-      setIsLoading(false);
-    } else if (storedToken) {
-      setToken(storedToken);
+    async function init() {
+      const storedToken = getCookie(STORAGE_KEYS.TOKEN);
+      const storedUser = getStoredUser();
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/user`, {
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
+      if (cancelled) return;
+
+      if (storedToken && storedUser) {
+        setToken(storedToken);
+        setUser(storedUser);
+        setIsLoading(false);
+      } else if (storedToken) {
+        setToken(storedToken);
+
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/user`,
+            {
+              headers: {
+                Authorization: `Bearer ${storedToken}`,
+              },
+            },
+          );
+          const data = await res.json();
+          if (cancelled) return;
           if (data.success && data.data) {
             setUser(data.data);
             setStoredUser(data.data);
           }
-        })
-        .catch(() => {
+        } catch {
+          if (cancelled) return;
           deleteCookie(STORAGE_KEYS.TOKEN);
           setStoredUser(null);
           setToken(null);
-        })
-        .finally(() => {
+        }
+        if (!cancelled) {
           setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
+      }
     }
+
+    init();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const login = async (data: LoginRequest) => {
