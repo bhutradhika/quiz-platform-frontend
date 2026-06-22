@@ -39,7 +39,7 @@ export const attemptService = {
   },
 
   getDashboardStats: async () => {
-    return apiClient.get<DashboardStats>(API_ENDPOINTS.ATTEMPT.DASHBOARD_STATS, true);
+    return apiClient.get<DashboardStats>(API_ENDPOINTS.FEED.DASHBOARD_STATS, true);
   },
 
   getCompletedQuizIds: async () => {

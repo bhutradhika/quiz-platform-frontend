@@ -40,7 +40,7 @@ export const quizService = {
 
   getLeaderboard: async (quizId: string, limit = 10) => {
     return apiClient.get<LeaderboardEntry[]>(
-      API_ENDPOINTS.QUIZ.LEADERBOARD(quizId) + `?limit=${limit}`,
+      API_ENDPOINTS.FEED.LEADERBOARD(quizId) + `?limit=${limit}`,
       true,
     );
   },

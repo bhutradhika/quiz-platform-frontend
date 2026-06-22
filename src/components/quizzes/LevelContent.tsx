@@ -1,6 +1,5 @@
 "use client";
 
-import { LevelPageSkeleton } from "@/components/skeletons";
 import { useAuth } from "@/context/AuthContext";
 import { formatCategory } from "@/lib/format";
 import { attemptService } from "@/services/attempt";
@@ -56,8 +55,6 @@ export default function LevelContent({ category, level }: { category: string; le
     };
   }, [isAuthenticated]);
 
-  if (isLoading) return <LevelPageSkeleton />;
-
   return (
     <div className="space-y-8">
       <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-violet-500 to-purple-600 p-8 text-white">
@@ -74,7 +71,21 @@ export default function LevelContent({ category, level }: { category: string; le
         )}
       </div>
 
-      {quizzes && quizzes.content.length > 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 border border-gray-100 animate-pulse">
+              <div className="h-5 bg-gray-200 rounded w-32 mb-3" />
+              <div className="h-4 bg-gray-200 rounded w-full mb-2" />
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-4" />
+              <div className="flex items-center justify-between">
+                <div className="h-4 bg-gray-200 rounded w-20" />
+                <div className="h-4 bg-gray-200 rounded w-4" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : quizzes && quizzes.content.length > 0 ? (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {quizzes.content.map((quiz) => {

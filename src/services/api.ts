@@ -1,5 +1,6 @@
 import { API_BASE_URL, STORAGE_KEYS } from "@/constants/api";
 import { ApiResponse } from "@/types";
+import toast from "react-hot-toast";
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -24,10 +25,23 @@ class ApiClient {
     return null;
   }
 
+  private shouldShowErrorToast(status: number, errorCode?: string): boolean {
+    const clientErrorStatuses = [400, 403];
+    const clientErrorCodes = ["VALIDATION_ERROR", "ACCESS_DENIED"];
+
+    if (clientErrorStatuses.includes(status)) return true;
+    if (errorCode && clientErrorCodes.includes(errorCode)) return true;
+    return false;
+  }
+
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     const data = await response.json();
 
     if (!response.ok) {
+      if (this.shouldShowErrorToast(response.status, data.errorCode)) {
+        toast.error(data.message || "An error occurred");
+      }
+
       return {
         success: false,
         data: null as T,
@@ -67,10 +81,12 @@ class ApiClient {
       const response = await fetch(`${this.baseUrl}${endpoint}`, config);
       return this.handleResponse<T>(response);
     } catch (error) {
+      const message = error instanceof Error ? error.message : "Network error";
+      toast.error(message);
       return {
         success: false,
         data: null as T,
-        message: error instanceof Error ? error.message : "Network error",
+        message,
       };
     }
   }

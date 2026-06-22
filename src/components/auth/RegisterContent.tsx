@@ -73,7 +73,7 @@ export default function RegisterContent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={onFormSubmit} className="space-y-4">
+          <form onSubmit={onFormSubmit} className="space-y-4" autoComplete="off">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -84,6 +84,7 @@ export default function RegisterContent() {
                 onChange={handleChange("email")}
                 onBlur={handleBlur("email")}
                 className={errors.email && touched.email ? "border-destructive" : ""}
+                autoComplete="off"
               />
               {errors.email && touched.email && (
                 <p className="text-sm text-destructive">{errors.email}</p>
@@ -100,6 +101,7 @@ export default function RegisterContent() {
                 onChange={handleChange("username")}
                 onBlur={handleBlur("username")}
                 className={errors.username && touched.username ? "border-destructive" : ""}
+                autoComplete="off"
               />
               {errors.username && touched.username && (
                 <p className="text-sm text-destructive">{errors.username}</p>
@@ -119,6 +121,7 @@ export default function RegisterContent() {
                   className={
                     errors.password && touched.password ? "border-destructive pr-10" : "pr-10"
                   }
+                  autoComplete="new-password"
                 />
                 <button
                   type="button"

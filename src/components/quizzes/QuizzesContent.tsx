@@ -1,6 +1,5 @@
 "use client";
 
-import { QuizzesPageSkeleton } from "@/components/skeletons";
 import { formatCategory } from "@/lib/format";
 import { quizService } from "@/services/quiz";
 import { CategoryStats } from "@/types";
@@ -40,8 +39,6 @@ export default function QuizzesContent() {
     };
   }, []);
 
-  if (isLoading) return <QuizzesPageSkeleton />;
-
   return (
     <div className="space-y-8">
       <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-violet-500 to-purple-600 p-8 text-white">
@@ -56,45 +53,64 @@ export default function QuizzesContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {categoryStats.map((stat) => {
-          const totalQuizzes = stat.levels.reduce((sum, level) => sum + level.totalQuizzes, 0);
-          return (
-            <Link
-              key={stat.name}
-              href={`/quizzes/${stat.name.toLowerCase()}`}
-              className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-purple-200 hover:shadow-lg transition-all"
-            >
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-white rounded-xl p-6 border border-gray-100 animate-pulse">
               <div className="flex items-start justify-between mb-4">
-                <div
-                  className={`w-12 h-12 rounded-xl bg-linear-to-br ${categoryGradients[stat.name] || "from-gray-400 to-gray-500"} flex items-center justify-center`}
-                >
-                  <span className="text-white text-xl font-bold">
-                    {formatCategory(stat.name).charAt(0)}
-                  </span>
-                </div>
-                <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 transition-colors" />
+                <div className="w-12 h-12 rounded-xl bg-gray-200" />
+                <div className="w-5 h-5 rounded bg-gray-200" />
               </div>
-              <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors text-lg">
-                {formatCategory(stat.name)}
-              </h3>
-              <p className="text-sm text-gray-500 mt-1">
-                {totalQuizzes} {totalQuizzes === 1 ? "quiz" : "quizzes"}
-              </p>
-              <div className="mt-4 flex flex-wrap gap-1">
-                {stat.levels.map((level) => (
-                  <span
-                    key={level.name}
-                    className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600"
+              <div className="h-5 bg-gray-200 rounded w-24 mb-2" />
+              <div className="h-4 bg-gray-200 rounded w-16" />
+              <div className="mt-4 flex gap-1">
+                <div className="h-5 bg-gray-200 rounded-full w-16" />
+                <div className="h-5 bg-gray-200 rounded-full w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {categoryStats.map((stat) => {
+            const totalQuizzes = stat.levels.reduce((sum, level) => sum + level.totalQuizzes, 0);
+            return (
+              <Link
+                key={stat.name}
+                href={`/quizzes/${stat.name.toLowerCase()}`}
+                className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-purple-200 hover:shadow-lg transition-all"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div
+                    className={`w-12 h-12 rounded-xl bg-linear-to-br ${categoryGradients[stat.name] || "from-gray-400 to-gray-500"} flex items-center justify-center`}
                   >
-                    {formatCategory(level.name)}
-                  </span>
-                ))}
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+                    <span className="text-white text-xl font-bold">
+                      {formatCategory(stat.name).charAt(0)}
+                    </span>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-purple-500 transition-colors" />
+                </div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors text-lg">
+                  {formatCategory(stat.name)}
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  {totalQuizzes} {totalQuizzes === 1 ? "quiz" : "quizzes"}
+                </p>
+                <div className="mt-4 flex flex-wrap gap-1">
+                  {stat.levels.map((level) => (
+                    <span
+                      key={level.name}
+                      className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600"
+                    >
+                      {formatCategory(level.name)}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
