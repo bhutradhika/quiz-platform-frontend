@@ -1,4 +1,5 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+export const API_BASE_URL =
+  "http://quiz-platform-backend-env.eba-z7zykp6p.eu-north-1.elasticbeanstalk.com";
 
 export const API_ENDPOINTS = {
   AUTH: {
