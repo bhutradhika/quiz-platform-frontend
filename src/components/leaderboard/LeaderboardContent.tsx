@@ -43,66 +43,20 @@ export default function LeaderboardContent() {
 
     async function load() {
       setIsLoading(true);
-      const allEntries: LeaderboardEntry[] = [];
-
-      if (selectedCategory && selectedLevel) {
-        const quizzesResponse = await quizService.getQuizzes(0, 100, selectedCategory);
-        if (cancelled) return;
-        if (quizzesResponse.success && quizzesResponse.data) {
-          for (const quiz of quizzesResponse.data.content) {
-            if (quiz.level === selectedLevel) {
-              const leaderboardResponse = await quizService.getLeaderboard(quiz.id, 20);
-              if (cancelled) return;
-              if (leaderboardResponse.success && leaderboardResponse.data)
-                allEntries.push(...leaderboardResponse.data);
-            }
-          }
-        }
-      } else if (selectedCategory) {
-        const quizzesResponse = await quizService.getQuizzes(0, 100, selectedCategory);
-        if (cancelled) return;
-        if (quizzesResponse.success && quizzesResponse.data) {
-          for (const quiz of quizzesResponse.data.content) {
-            const leaderboardResponse = await quizService.getLeaderboard(quiz.id, 10);
-            if (cancelled) return;
-            if (leaderboardResponse.success && leaderboardResponse.data)
-              allEntries.push(...leaderboardResponse.data);
-          }
-        }
-      } else if (selectedLevel) {
-        const quizzesResponse = await quizService.getQuizzes(0, 100);
-        if (cancelled) return;
-        if (quizzesResponse.success && quizzesResponse.data) {
-          for (const quiz of quizzesResponse.data.content) {
-            if (quiz.level === selectedLevel) {
-              const leaderboardResponse = await quizService.getLeaderboard(quiz.id, 20);
-              if (cancelled) return;
-              if (leaderboardResponse.success && leaderboardResponse.data)
-                allEntries.push(...leaderboardResponse.data);
-            }
-          }
-        }
-      } else {
-        const quizzesResponse = await quizService.getQuizzes(0, 100);
-        if (cancelled) return;
-        if (quizzesResponse.success && quizzesResponse.data) {
-          for (const quiz of quizzesResponse.data.content) {
-            const leaderboardResponse = await quizService.getLeaderboard(quiz.id, 10);
-            if (cancelled) return;
-            if (leaderboardResponse.success && leaderboardResponse.data)
-              allEntries.push(...leaderboardResponse.data);
-          }
-        }
-      }
+      
+      const response = await quizService.getGlobalLeaderboard(
+        selectedCategory || undefined,
+        selectedLevel || undefined,
+        50
+      );
 
       if (cancelled) return;
 
-      allEntries.sort((a, b) => {
-        if (b.score !== a.score) return b.score - a.score;
-        return b.percentage - a.percentage;
-      });
-      const ranked = allEntries.slice(0, 50).map((entry, index) => ({ ...entry, rank: index + 1 }));
-      setLeaderboard(ranked);
+      if (response.success && response.data) {
+        setLeaderboard(response.data);
+      } else {
+        setLeaderboard([]);
+      }
       setIsLoading(false);
     }
 

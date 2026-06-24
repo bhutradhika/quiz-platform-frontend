@@ -40,9 +40,20 @@ export const quizService = {
 
   getLeaderboard: async (quizId: string, limit = 10) => {
     return apiClient.get<LeaderboardEntry[]>(
-      API_ENDPOINTS.FEED.LEADERBOARD(quizId) + `?limit=${limit}`,
+      API_ENDPOINTS.FEED.LEADERBOARD_BY_QUIZ(quizId) + `?limit=${limit}`,
       true,
     );
+  },
+
+  getGlobalLeaderboard: async (category?: string, level?: string, limit = 50) => {
+    let endpoint = `${API_ENDPOINTS.FEED.LEADERBOARD}?limit=${limit}`;
+    if (category) {
+      endpoint += `&category=${category}`;
+    }
+    if (level) {
+      endpoint += `&level=${level}`;
+    }
+    return apiClient.get<LeaderboardEntry[]>(endpoint, true);
   },
 
   getAdminStats: async () => {

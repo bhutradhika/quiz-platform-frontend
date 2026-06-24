@@ -25,7 +25,8 @@ export const API_ENDPOINTS = {
   },
   FEED: {
     DASHBOARD_STATS: "/api/feed/dashboard/stats",
-    LEADERBOARD: (quizId: string) => `/api/feed/leaderboard/${quizId}`,
+    LEADERBOARD: "/api/feed/leaderboard",
+    LEADERBOARD_BY_QUIZ: (quizId: string) => `/api/feed/leaderboard/${quizId}`,
   },
   ADMIN: {
     CREATE_QUIZ: "/api/admin/quizzes",
