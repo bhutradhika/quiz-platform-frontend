@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  "http://quiz-platform-backend-env.eba-z7zykp6p.eu-north-1.elasticbeanstalk.com";
+  "https://9nzuts7x4c.execute-api.eu-north-1.amazonaws.com/proxy";
 
 export const API_ENDPOINTS = {
   AUTH: {
