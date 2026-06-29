@@ -71,6 +71,8 @@ class ApiClient {
     const config: RequestInit = {
       method,
       headers,
+      credentials: "include",
+      mode: "cors",
     };
 
     if (body) {
