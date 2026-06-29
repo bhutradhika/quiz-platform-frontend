@@ -1,5 +1,5 @@
 export const API_BASE_URL =
-  "https://9nzuts7x4c.execute-api.eu-north-1.amazonaws.com/proxy";
+  "https://xrozok06eh.execute-api.ap-south-1.amazonaws.com/proxy";
 
 export const API_ENDPOINTS = {
   AUTH: {

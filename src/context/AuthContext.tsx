@@ -1,6 +1,6 @@
 "use client";
 
-import { STORAGE_KEYS } from "@/constants/api";
+import { API_BASE_URL, STORAGE_KEYS } from "@/constants/api";
 import { authService } from "@/services/auth";
 import { AuthResponse, LoginRequest, RegisterRequest, User, UserRole } from "@/types";
 import { useRouter } from "next/navigation";
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         try {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/user`,
+            `${process.env.NEXT_PUBLIC_API_URL || `${API_BASE_URL}`}/api/user`,
             {
               headers: {
                 Authorization: `Bearer ${storedToken}`,
